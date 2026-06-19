@@ -463,7 +463,23 @@ function confirmOrder() {
   localStorage.setItem('sl_orders', JSON.stringify(orders));
 
   // ارسال سفارش به ربات
-  fetch("https://api.telegram.org/bot8955813028:AAGTjopFEbIcXaQD0LLbTj4Buq0ucRG6Kzw/sendMessage", {
+  fetch(if (uploadedFile) {
+  const form = new FormData();
+  form.append("chat_id", "7438214247");
+  form.append("photo", uploadedFile);
+  form.append("caption", 
+`📸 رسید پرداخت جدید
+
+🆔 ${order.id}
+📦 ${order.plan}
+💰 ${order.price}`
+  );
+
+  fetch("https://api.telegram.org/bot8955813028:AAGTjopFEbIcXaQD0LLbTj4Buq0ucRG6Kzw/sendPhoto", {
+    method:"POST",
+    body: form
+  });
+}"https://api.telegram.org/bot8955813028:AAGTjopFEbIcXaQD0LLbTj4Buq0ucRG6Kzw/sendMessage", {
     method:"POST",
     headers:{
       "Content-Type":"application/json"
