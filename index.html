@@ -674,6 +674,7 @@ function checkWheelCooldown() {
 }
 
 // ══ SUPPORT ══
+// ══ SUPPORT ══
 async function submitTicket() {
   const subject = document.getElementById('ticket-subject').value;
   const text = document.getElementById('ticket-text').value;
@@ -711,6 +712,16 @@ ${text}
   document.getElementById('ticket-text').value = '';
 
   showToast('📨 تیکت ارسال شد!');
+}
+
+
+// باز کردن پیوی ادمین
+function openTelegram() {
+  if (window.Telegram && Telegram.WebApp) {
+    Telegram.WebApp.openTelegramLink('https://t.me/sector_ad');
+  } else {
+    window.location.href = 'https://t.me/sector_ad';
+  }
 }
 // ══ TOAST ══
 function showToast(msg) {
