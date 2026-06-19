@@ -449,10 +449,37 @@ function handleUpload(e) {
   reader.readAsDataURL(file);
 }
 function confirmOrder() {
-  const order = { id:'ORD-'+Date.now(), plan:selectedPlan.name, duration:selectedPlan.unit, price:selectedPlan.price, status:'pending', date:new Date().toLocaleDateString('fa-IR') };
+  const order = {
+    id:'ORD-'+Date.now(),
+    plan:selectedPlan.name,
+    duration:selectedPlan.unit,
+    price:selectedPlan.price,
+    status:'pending',
+    date:new Date().toLocaleDateString('fa-IR')
+  };
+
   const orders = JSON.parse(localStorage.getItem('sl_orders')||'[]');
   orders.unshift(order);
   localStorage.setItem('sl_orders', JSON.stringify(orders));
+
+  // ارسال سفارش به ربات
+  fetch("https://api.telegram.org/bot8955813028:AAGTjopFEbIcXaQD0LLbTj4Buq0ucRG6Kzw/sendMessage", {
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify({
+      chat_id:"7438214247",
+      text:`🛒 سفارش جدید
+
+🆔 ${order.id}
+📦 ${order.plan}
+⏳ ${order.duration}
+💰 ${order.price}
+📅 ${order.date}`
+    })
+  });
+
   document.getElementById('buy-modal').classList.remove('open');
   showToast('✅ سفارش ثبت شد! در انتظار تایید...');
   updateAccountPage();
