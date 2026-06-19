@@ -449,6 +449,7 @@ function handleUpload(e) {
   reader.readAsDataURL(file);
 }
 function confirmOrder() {
+
   const order = {
     id:'ORD-'+Date.now(),
     plan:selectedPlan.name,
@@ -462,42 +463,64 @@ function confirmOrder() {
   orders.unshift(order);
   localStorage.setItem('sl_orders', JSON.stringify(orders));
 
-  // ارسال سفارش به ربات
-  fetch(if (uploadedFile) {
-  const form = new FormData();
-  form.append("chat_id", "7438214247");
-  form.append("photo", uploadedFile);
-  form.append("caption", 
+
+  const botToken = "8955813028:AAGTjopFEbIcXaQD0LLbTj4Buq0ucRG6Kzw";
+  const chatId = "7438214247";
+
+
+  // اگر عکس رسید انتخاب شده بود
+  if (uploadedFile) {
+
+    const form = new FormData();
+
+    form.append("chat_id", chatId);
+    form.append("photo", uploadedFile);
+
+    form.append("caption",
 `📸 رسید پرداخت جدید
 
 🆔 ${order.id}
-📦 ${order.plan}
-💰 ${order.price}`
-  );
+📦 پلن: ${order.plan}
+⏳ ${order.duration}
+💰 مبلغ: ${order.price}
+📅 ${order.date}`
+    );
 
-  fetch("https://api.telegram.org/bot8955813028:AAGTjopFEbIcXaQD0LLbTj4Buq0ucRG6Kzw/sendPhoto", {
-    method:"POST",
-    body: form
-  });
-}"https://api.telegram.org/bot8955813028:AAGTjopFEbIcXaQD0LLbTj4Buq0ucRG6Kzw/sendMessage", {
-    method:"POST",
-    headers:{
-      "Content-Type":"application/json"
-    },
-    body:JSON.stringify({
-      chat_id:"7438214247",
-      text:`🛒 سفارش جدید
+
+    fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
+      method:"POST",
+      body:form
+    });
+
+
+  } else {
+
+
+    fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        chat_id:chatId,
+        text:
+`🛒 سفارش جدید
 
 🆔 ${order.id}
 📦 ${order.plan}
 ⏳ ${order.duration}
 💰 ${order.price}
 📅 ${order.date}`
-    })
-  });
+      })
+    });
+
+  }
+
 
   document.getElementById('buy-modal').classList.remove('open');
+
   showToast('✅ سفارش ثبت شد! در انتظار تایید...');
+
   updateAccountPage();
 }
 
