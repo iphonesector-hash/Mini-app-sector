@@ -617,16 +617,44 @@ function checkWheelCooldown() {
 }
 
 // ══ SUPPORT ══
-function submitTicket() {
+async function submitTicket() {
   const subject = document.getElementById('ticket-subject').value;
   const text = document.getElementById('ticket-text').value;
-  if (!subject || !text.trim()) { showToast('⚠️ لطفاً فرم را کامل کنید'); return; }
+
+  if (!subject || !text.trim()) {
+    showToast('⚠️ لطفاً فرم را کامل کنید');
+    return;
+  }
+
+  const message = `
+📩 تیکت جدید سکتورلند
+
+📌 موضوع:
+${subject}
+
+📝 توضیحات:
+${text}
+`;
+
+  const botToken = "8955813028:AAGTjopFEbIcXaQD0LLbTj4Buq0ucRG6Kzw";
+  const chatId = "8955813028";
+
+  fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      chat_id: chatId,
+      text: message
+    })
+  });
+
   document.getElementById('ticket-subject').value = '';
   document.getElementById('ticket-text').value = '';
-  showToast('📨 تیکت ارسال شد! پاسخ ظرف ۳۰ دقیقه');
-}
-function openTelegram() { window.open('https://t.me/sector_ad','_blank'); }
 
+  showToast('📨 تیکت ارسال شد!');
+}
 // ══ TOAST ══
 function showToast(msg) {
   const t = document.getElementById('toast');
